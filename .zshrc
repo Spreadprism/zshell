@@ -262,5 +262,5 @@ conda_activate_current_dir # Activate conda env if present
 # ------------------------------------------------------------
 if command -v tmux &> /dev/null
 then
-  source ~/.dotfiles/shell/tmux.zsh
+  source ~/.shell/tmux.zsh
 fi

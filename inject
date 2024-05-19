@@ -1,5 +1,7 @@
 #!/bin/bash
-
+# ------------------------------------------------------------
+# Dependencies
+# ------------------------------------------------------------
 if ! command -v zsh &> /dev/null
 then
   echo "Zsh is not installed. Please install zsh first."
@@ -17,13 +19,27 @@ if [ "$SHELL" != "/bin/zsh" ]; then
   chsh -s /bin/zsh
 fi
 
-echo "Cloning shell files"
-DOT_DIR="$HOME/.dotfiles"
-rm "$HOME/.zshrc"
-ln -s "$DOT_DIR/shell/.zshrc" "$HOME/.zshrc"
+# ------------------------------------------------------------
+# Fetching shell configurations
+# ------------------------------------------------------------
+SHELL_DIR="$HOME/.shell"
 
-echo "Linking starship configuration"
-rm -f "$HOME/.config/starship.toml"
-ln -s "$DOT_DIR/.config/starship.toml" "$HOME/.config/starship.toml"
+if [ ! -d "$SHELL_DIR" ]; then
+  echo "Cloning shell configuration..."
+  git clone https://github.com/Spreadprism/zshell.git $SHELL_DIR
 
-zsh
+  if [ ! -d "$SHELL_DIR" ]; then
+    echo "Failed to clone shell configuration"
+    exit 1
+  fi
+
+  echo "Linking shell configurations..."
+  # .zshrc
+  rm -f $HOME/.zhsrc.bak
+  mv $HOME/.zshrc $HOME/.zshrc.bak
+  ln -s $SHELL_DIR/.zshrc $HOME/.zshrc
+  # INFO: starship.toml
+  rm -f $HOME/.config/starship.toml.bak
+  mv $HOME/.config/starship.toml $HOME/.config/starship.toml.bak
+  ln -s $SHELL_DIR/starship.toml $HOME/.config/starship.toml
+fi
