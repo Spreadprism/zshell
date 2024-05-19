@@ -1,0 +1,101 @@
+format = '''
+╭\[$directory\](${custom.conda-env-available})$conda$git_branch$git_status(
+├$python$golang$c$dotnet$rust$elixir$java$ruby$nodejs${custom.docker})
+╰─$character
+'''
+add_newline = false
+continuation_prompt = '  ➤ '
+command_timeout = 1000
+
+[character]
+format = '$symbol '
+success_symbol = '[➤](bold green)'
+error_symbol = '[➤](bold red)'
+vimcmd_symbol = '[➤](bold cyan)'
+
+[directory]
+format = '[$path]($style)(\]\[[$read_only]($read_only_style))'
+truncation_length = 5
+style = "bold cyan"
+truncate_to_repo = false
+read_only = ''
+read_only_style = 'yellow'
+
+
+[conda]
+format = '\([$environment]($style)\)'
+# style = 'white'
+
+[container]
+format = '[\($symbol \[$name\]]($style)\)'
+symbol = ''
+style = 'bold blue dimmed'
+
+[hostname]
+ssh_only = true
+format = '[$hostname]($style)'
+
+[dotnet]
+format = '\([$symbol( $version)( 🎯 $tfm)]($style)\)'
+symbol = ''
+style = 'fg:#876CE2'
+detect_files = [
+  'global.json',
+  'Directory.Build.props',
+  'Directory.Build.targets',
+  'Packages.props',
+]
+
+[c]
+format = '\([$symbol( $version(-$name))]($style)\)'
+symbol = ''
+style = 'blue'
+
+[python]
+format = '\([$symbol$version]($style)\)'
+symbol = ' '
+style = 'yellow'
+
+[golang]
+format = '\([$symbol($version)]($style)\)'
+symbol = '󰟓 '
+
+[rust]
+format = '\([$symbol ($version)]($style)\)'
+symbol = ''
+style = 'fg:#FF7047'
+
+[ruby]
+format = '\([$symbol ($version)]($style)\)'
+symbol = ' '
+
+[elixir]
+format = '\([$symbol ($version \(OTP $otp_version\))]($style)\)'
+symbol = ''
+
+[java]
+format = '\([${symbol} (${version})]($style)\)'
+symbol = ''
+style = 'fg:#EA2D2E'
+
+[nodejs]
+format = '\([$symbol( $version)]($style)\)'
+symbol = '󰎙'
+
+[custom.conda-env-available]
+format = '\([]($style)\)'
+when = 'can_activate'
+style = 'bold green'
+
+[git_branch]
+format = ' on [$symbol$branch(:$remote_branch)]($style)'
+
+[git_status]
+format = ' ([$all_status(\[$ahead_behind\])]($style) )'
+diverged = '\[󰙅\]'
+conflicted = '\[{count}󰮘\]'
+modified = '\[${count}󱇧\]'
+untracked = '\[${count}󰷊\]'
+deleted = '\[${count}\]'
+stashed = '\[${count}󰥥\]'
+staged = '\[${count}󰝒\]'

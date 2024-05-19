@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if ! command -v zsh &> /dev/null
+then
+  echo "Zsh is not installed. Please install zsh first."
+  exit 1
+fi
+
+if ! command -v git &> /dev/null
+then
+  echo "Git is not installed. Please install git first."
+  exit 1
+fi
+
+if [ "$SHELL" != "/bin/zsh" ]; then
+  echo "Changing shell to zsh"
+  chsh -s /bin/zsh
+fi
+
+echo "Cloning shell files"
+DOT_DIR="$HOME/.dotfiles"
+rm "$HOME/.zshrc"
+ln -s "$DOT_DIR/shell/.zshrc" "$HOME/.zshrc"
+
+echo "Linking starship configuration"
+rm -f "$HOME/.config/starship.toml"
+ln -s "$DOT_DIR/.config/starship.toml" "$HOME/.config/starship.toml"
+
+zsh
