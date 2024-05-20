@@ -2,6 +2,7 @@
 # ------------------------------------------------------------
 # Dependencies
 # ------------------------------------------------------------
+# TODO: Should add auto installation for these dependencies
 if ! command -v zsh &> /dev/null
 then
   echo "Zsh is not installed. Please install zsh first."
@@ -32,14 +33,23 @@ if [ ! -d "$SHELL_DIR" ]; then
     echo "Failed to clone shell configuration"
     exit 1
   fi
-
-  echo "Linking shell configurations..."
-  # .zshrc
-  rm -f $HOME/.zhsrc.bak
-  mv $HOME/.zshrc $HOME/.zshrc.bak
-  ln -s $SHELL_DIR/.zshrc $HOME/.zshrc
-  # INFO: starship.toml
-  rm -f $HOME/.config/starship.toml.bak
-  mv $HOME/.config/starship.toml $HOME/.config/starship.toml.bak
-  ln -s $SHELL_DIR/starship.toml $HOME/.config/starship.toml
 fi
+# ------------------------------------------------------------
+# Shell configs
+# ------------------------------------------------------------
+link_file() {
+  source_file="$SHELL_DIR/$1"
+  dest_file=$2
+
+  bak_file="$dest_file.bak"
+
+  rm -f $bak_file
+  mv $dest_file $bak_file
+  ln -s $source_file $dest_file
+}
+
+# ------------------------------------------------------------
+echo "Linking shell configurations..."
+# .zshrc
+link_file .zshrc $HOME/.zshrc
+link_file starship.toml $HOME/.config/starship.toml

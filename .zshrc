@@ -29,10 +29,13 @@ zinit ice as"command" from"gh-r" \
           atpull"%atclone" src"init.zsh"
 DIRECTORY_STYLE="bold cyan"
 zinit light starship/starship
-# zinit ice depth=1; zinit light romkatv/powerlevel10k
 # ------------------------------------------------------------
 zinit ice wait lucid
 zinit_program junegunn/fzf
+zinit ice wait lucid
+zinit_program jqlang/jq
+zinit ice from"gh-r" as"command" mv"bat*/bat -> bat"
+zinit light sharkdp/bat
 zinit ice wait lucid
 zinit_program ajeetdsouza/zoxide
 zinit ice wait lucid
@@ -156,6 +159,7 @@ zle -N next_dir
 # ------------------------------------------------------------
 alias zz='cd -'
 alias ls='eza'
+alias cat='bat'
 alias lg='lazygit'
 alias activate='conda_activate_current_dir'
 alias deactivate='conda deactivate'
@@ -255,8 +259,6 @@ fi
 # ------------------------------------------------------------
 eval "$(zoxide init --cmd cd zsh)"
 conda_activate_current_dir # Activate conda env if present
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-# [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 # ------------------------------------------------------------
 # Tmux
 # ------------------------------------------------------------
