@@ -2,19 +2,36 @@
 # ------------------------------------------------------------
 # Dependencies
 # ------------------------------------------------------------
-# TODO: Should add auto installation for these dependencies
+echo "Verifying dependencies..."
+dependencies="zsh git"
+case $(cat /etc/*-release | grep -i '^ID=' | cut -d'=' -f2) in
+  "arch")
+    sudo pacman -Syu $dependencies --needed --noconfirm
+    ;;
+  "ubuntu" | "debian")
+    sudo apt-get update
+    sudo apt-get install $dependencies -y
+    ;;
+  "*")
+    echo "Error: Unsupported OS. Unable to install dependencies automatically."
+    ;;
+esac
+
 if ! command -v zsh &> /dev/null
 then
-  echo "Zsh is not installed. Please install zsh first."
+  echo "Error: Zsh is not installed. Automatic installation failed. Please install Zsh manually and rerun the script."
   exit 1
 fi
 
 if ! command -v git &> /dev/null
 then
-  echo "Git is not installed. Please install git first."
+  echo "Error: Git is not installed. Automatic installation failed. Please install Git manually and rerun the script."
   exit 1
 fi
 
+# ------------------------------------------------------------
+# Setting zsh as default shell
+# ------------------------------------------------------------
 ZSH_PATH=$(which zsh)
 if [ "$SHELL" != "$ZSH_PATH" ]; then
   echo "Changing shell to zsh"
@@ -25,7 +42,6 @@ fi
 # Fetching shell configurations
 # ------------------------------------------------------------
 SHELL_DIR="$HOME/.shell"
-
 if [ ! -d "$SHELL_DIR" ]; then
   echo "Cloning shell configuration..."
   git clone https://github.com/Spreadprism/zshell.git $SHELL_DIR
@@ -48,12 +64,20 @@ link_file() {
   fi
   ln -s $source_file $dest_file
 }
-
 # ------------------------------------------------------------
+
 echo "Linking shell configurations..."
 CONFIGS_DIR="$HOME/.config"
-link_file .zshrc $HOME/.zshrc
+# Making sure config directory exists
 if [ ! -d "$CONFIGS_DIR" ]; then
   mkdir $CONFIGS_DIR
 fi
+
+link_file .zshrc $HOME/.zshrc
 link_file starship.toml $CONFIGS_DIR/starship.toml
+
+# ------------------------------------------------------------
+# Starting zsh
+# ------------------------------------------------------------
+echo "Starting zsh..."
+zsh
