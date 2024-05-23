@@ -15,9 +15,10 @@ then
   exit 1
 fi
 
-if [ "$SHELL" != "/bin/zsh" ]; then
+ZSH_PATH=$(which zsh)
+if [ "$SHELL" != "$ZSH_PATH" ]; then
   echo "Changing shell to zsh"
-  chsh -s /bin/zsh
+  sudo chsh -s $ZSH_PATH $USER
 fi
 
 # ------------------------------------------------------------
@@ -40,11 +41,12 @@ fi
 link_file() {
   source_file="$SHELL_DIR/$1"
   dest_file=$2
-
   bak_file="$dest_file.bak"
 
-  rm -f $bak_file
-  mv $dest_file $bak_file
+  if [ -L $dest_file ]; then
+    rm $dest_file
+    mv $dest_file $bak_file
+  fi
   ln -s $source_file $dest_file
 }
 
