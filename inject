@@ -44,8 +44,8 @@ link_file() {
   bak_file="$dest_file.bak"
 
   if [ -e $dest_file ]; then
-    rm $dest_file
     mv $dest_file $bak_file
+    rm $dest_file
   fi
   ln -s $source_file $dest_file
 }
