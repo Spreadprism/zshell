@@ -45,7 +45,6 @@ link_file() {
 
   if [ -e $dest_file ]; then
     mv $dest_file $bak_file
-    rm $dest_file
   fi
   ln -s $source_file $dest_file
 }
