@@ -43,7 +43,7 @@ link_file() {
   dest_file=$2
   bak_file="$dest_file.bak"
 
-  if [ -L $dest_file ]; then
+  if [ -e $dest_file ]; then
     rm $dest_file
     mv $dest_file $bak_file
   fi
@@ -52,6 +52,9 @@ link_file() {
 
 # ------------------------------------------------------------
 echo "Linking shell configurations..."
-# .zshrc
+CONFIGS_DIR="$HOME/.config"
 link_file .zshrc $HOME/.zshrc
-link_file starship.toml $HOME/.config/starship.toml
+if [ ! -d "$CONFIGS_DIR" ]; then
+  mkdir $CONFIGS_DIR
+fi
+link_file starship.toml $CONFIGS_DIR/starship.toml
