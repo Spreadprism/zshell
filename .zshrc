@@ -157,6 +157,9 @@ zle -N next_dir
 # ------------------------------------------------------------
 # Aliases
 # ------------------------------------------------------------
+alias v='nvim'
+alias nvim-rocks='NVIM_APPNAME=nvim-rocks nvim'
+alias vlr='NVIM_APPNAME=lazyrocks nvim'
 alias zz='cd -'
 alias ls='eza'
 alias cat='bat'
