@@ -80,4 +80,4 @@ link_file starship.toml $CONFIGS_DIR/starship.toml
 # Starting zsh
 # ------------------------------------------------------------
 echo "Starting zsh..."
-zsh
+exec zsh

@@ -4,7 +4,7 @@ format = '''
 ╰─$character
 '''
 add_newline = false
-continuation_prompt = '  ➤ '
+continuation_prompt = '  [➤](bold cyan) '
 command_timeout = 1000
 
 [character]

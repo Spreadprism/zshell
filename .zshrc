@@ -12,6 +12,55 @@ if [ ! -d "$ZINIT_HOME" ]; then
 fi
 source "${ZINIT_HOME}/zinit.zsh"
 # ------------------------------------------------------------
+# Paths
+# ------------------------------------------------------------
+export PATH="$PATH:$HOME/.dotfiles/bin"
+# ------------------------------------------------------------
+# gcloud
+if [ -d "/opt/google-cloud-cli/" ]; then
+  export CLOUDSDK_ROOT_DIR=/opt/google-cloud-cli
+  export CLOUDSDK_PYTHON=$(which python)
+  export CLOUDSDK_PYTHON_ARGS='-S -W ignore'
+  export PATH=$CLOUDSDK_ROOT_DIR/bin:$PATH
+  export GOOGLE_CLOUD_SDK_HOME=$CLOUDSDK_ROOT_DIR
+fi
+# ------------------------------------------------------------
+if command -v pnpm &> /dev/null
+then
+  export PNPM_HOME="/home/avalon/.local/share/pnpm"
+  case ":$PATH:" in
+    *":$PNPM_HOME:"*) ;;
+    *) export PATH="$PNPM_HOME:$PATH" ;;
+  esac
+fi
+# ------------------------------------------------------------
+if command -v pipx &> /dev/null
+then
+  export PATH="$PATH:$HOME/.local/bin"
+fi
+# ------------------------------------------------------------
+if command -v gem &> /dev/null
+then
+  export PATH="$PATH:$HOME/.local/share/gem/ruby/3.0.0/bin/"
+fi
+# ------------------------------------------------------------
+if command -v go &> /dev/null
+then
+  export GOPATH="$HOME/.go"
+  export GOBIN="$GOPATH/bin"
+fi
+# ------------------------------------------------------------
+if command -v cargo &> /dev/null
+then
+  export PATH="$HOME/.cargo/bin:$PATH"
+fi
+# ------------------------------------------------------------
+if command -v nvim &> /dev/null
+then
+  export NVIM_LISTEN_ADDRESS='/tmp/nvim.socket'
+fi
+
+# ------------------------------------------------------------
 # Plugins
 # ------------------------------------------------------------
 zinit_program () {
@@ -30,6 +79,7 @@ zinit ice as"command" from"gh-r" \
 DIRECTORY_STYLE="bold cyan"
 zinit light starship/starship
 # ------------------------------------------------------------
+# TODO: Setup ripgrep
 zinit ice wait lucid
 zinit_program junegunn/fzf
 zinit ice wait lucid
@@ -63,12 +113,10 @@ ZSH_AUTOSUGGEST_STRATEGY=(match_prev_cmd completion)
 zinit light qoomon/zsh-lazyload # INFO: Cannot be lazyloaded
 zinit ice wait lucid
 zinit snippet OMZP::sudo
-# ------------------------------------------------------------
 if [[ $(cat /etc/*-release | grep -i '^ID=' | cut -d'=' -f2) = 'arch' ]]
 then
   zinit snippet OMZP::archlinux
 fi
-# ------------------------------------------------------------
 zinit ice wait lucid
 zinit light joshskidmore/zsh-fzf-history-search
 zinit ice wait lucid
@@ -76,14 +124,28 @@ zinit light Aloxaf/fzf-tab
 zinit snippet OMZP::command-not-found
 zinit ice wait lucid
 zinit snippet OMZP::dirhistory
-zinit ice wait lucid
-zinit_completion OMZP::poetry
-zinit ice wait lucid
-zinit_completion OMZP::docker
-zinit ice wait lucid
-zinit_completion OMZP::docker-compose
-zinit ice wait lucid
-zinit_completion OMZP::kubectl
+if command -v poetry &> /dev/null
+then
+  zinit ice wait lucid
+  zinit_completion OMZP::poetry
+fi
+if command -v docker &> /dev/null
+then
+  zinit ice wait lucid
+  zinit_completion OMZP::docker
+  zinit ice wait lucid
+  zinit_completion OMZP::docker-compose
+fi
+if command -v kubectl &> /dev/null
+then
+  zinit ice wait lucid
+  zinit_completion OMZP::kubectl
+fi
+if command -v gcloud &> /dev/null
+then
+  zinit ice wait lucid
+  zinit_completion OMZP::gcloud
+fi
 # ------------------------------------------------------------
 # Completion
 # ------------------------------------------------------------
@@ -181,44 +243,6 @@ function zvm_after_init() {
   bindkey '^P' next_dir
 }
 # ------------------------------------------------------------
-# Paths
-# ------------------------------------------------------------
-export PATH="$PATH:$HOME/.dotfiles/bin"
-if command -v pnpm &> /dev/null
-then
-  export PNPM_HOME="/home/avalon/.local/share/pnpm"
-  case ":$PATH:" in
-    *":$PNPM_HOME:"*) ;;
-    *) export PATH="$PNPM_HOME:$PATH" ;;
-  esac
-fi
-# ------------------------------------------------------------
-if command -v pipx &> /dev/null
-then
-  export PATH="$PATH:$HOME/.local/bin"
-fi
-# ------------------------------------------------------------
-if command -v gem &> /dev/null
-then
-  export PATH="$PATH:$HOME/.local/share/gem/ruby/3.0.0/bin/"
-fi
-# ------------------------------------------------------------
-if command -v go &> /dev/null
-then
-  export GOPATH="$HOME/.go"
-  export GOBIN="$GOPATH/bin"
-fi
-# ------------------------------------------------------------
-if command -v cargo &> /dev/null
-then
-  export PATH="$HOME/.cargo/bin:$PATH"
-fi
-# ------------------------------------------------------------
-if command -v nvim &> /dev/null
-then
-  export NVIM_LISTEN_ADDRESS='/tmp/nvim.socket'
-fi
-# ------------------------------------------------------------
 # conda
 # ------------------------------------------------------------
 init_conda() {
@@ -241,6 +265,13 @@ init_nvm() {
   export NVM_DIR="$HOME/.nvm"
   [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
   [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+}
+init_gcloud() {
+  export CLOUDSDK_ROOT_DIR=/opt/google-cloud-cli
+  export CLOUDSDK_PYTHON=/usr/bin/python
+  export CLOUDSDK_PYTHON_ARGS='-S -W ignore'
+  export PATH=$CLOUDSDK_ROOT_DIR/bin:$PATH
+  export GOOGLE_CLOUD_SDK_HOME=$CLOUDSDK_ROOT_DIR
 }
 # ------------------------------------------------------------
 # Lazy loading
